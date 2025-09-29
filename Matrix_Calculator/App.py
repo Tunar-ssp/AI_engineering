@@ -1,4 +1,4 @@
-from MatricCalculator import gaussian_elimination
+from Calculator import gaussian_elimination
 import tkinter as tk
 import numpy as np
 def create_matrix_entries(n):
