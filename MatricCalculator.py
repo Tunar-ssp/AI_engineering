@@ -106,22 +106,22 @@ def gaussian_elimination(A, B):
 there must be your variables like a,b,c,w,y and etc. Normal matrix and its constant part
 """
 
-A = np.array([
-    [3, 6, 6, 8],
-    [5, 3, 6, 0],
-    [0, 4, -5, 8],
-    [0, 0, 4, 8]
-], dtype=float)  
-B = np.array([
-    [1],
-    [-10],
-    [8],
-    [9]
-], dtype=float)
-variables = ['x', 'y', 'w', 'z']
-sols=gaussian_elimination(A,B)
-if not isinstance(sols,str):
-    for variable, val in enumerate(sols):
-        print(f'{variable} = {val}')
-else:
-    print(sols)
+# A = np.array([
+#     [3, 6, 6, 8],
+#     [5, 3, 6, 0],
+#     [0, 4, -5, 8],
+#     [0, 0, 4, 8]
+# ], dtype=float)  
+# B = np.array([
+#     [1],
+#     [-10],
+#     [8],
+#     [9]
+# ], dtype=float)
+# variables = ['x', 'y', 'w', 'z']
+# sols=gaussian_elimination(A,B)
+# if not isinstance(sols,str):
+#     for variable, val in enumerate(sols):
+#         print(f'{variable} = {val}')
+# else:
+#     print(sols)
