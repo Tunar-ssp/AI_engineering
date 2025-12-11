@@ -14,9 +14,10 @@ struct Parameters {
     vector<double> W;
     double b;
 };
-
-
-
+struct Gradients {
+    double dW;
+    double db;
+};
 
 
 
@@ -94,24 +95,139 @@ Parameters initialize_parameters(int n_x = 1) {
 
     return params;
 }
+vector<double> forward_propagation(const vector<double>&normalized_sales,const Parameters&params){
 
+    vector<double> W = params.W, Y_Hat;                 
+    double b = params.b;
+    
+    for (double x: normalized_sales){
+        double item= W[0]*x+b;
+        Y_Hat.push_back(item);
+    }
+    return Y_Hat;
+}
+double compute_cost(const vector<double>& Y_Hat, const vector<double>& Y) {
+    int m= Y_Hat.size();
+    double cost=0.0;
+    for(int i=0;i<m;i++){
+        double diff=Y_Hat[i]-Y[i];
+        cost+=diff;
+    }
+    return cost;
+
+
+}
+Gradients backward_propagation(const vector<double>& Y_Hat,const vector<double>& X,const vector<double>& Y){
+
+    vector<double> dZ(Y.size());
+    
+    for (size_t i = 0; i < Y.size(); ++i) {
+        dZ[i] = Y_Hat[i] - Y[i];
+    }
+    double dW = 0.0;
+    for (size_t i = 0; i < X.size(); ++i) {
+        dW += dZ[i] * X[i];
+    }
+    dW = dW / X.size();
+
+    double db=0.0;
+    for(double val:dZ) db+=val;
+    db/=Y.size();
+
+    Gradients grad;
+    grad.dW = dW;
+    grad.db = db;
+    return grad;
+
+}
+
+Parameters update_parameters(const Parameters& params, const Gradients& grads, double learning_rate = 0.01){
+    Parameters updated_params;
+
+    // for now we have just one weight
+    updated_params.W.resize(params.W.size());
+    for (size_t i = 0; i < params.W.size(); ++i) {
+        updated_params.W[i] = params.W[i] - learning_rate * grads.dW;
+    }
+
+    updated_params.b = params.b - learning_rate * grads.db;
+
+    return updated_params;
+}
+Parameters train(const vector<double>& X, const vector<double>& Y, int num_iterations, double learning_rate) {
+    Parameters params = initialize_parameters();
+
+    // loop
+    for (int i = 0; i < num_iterations; ++i) {
+        vector<double> Y_Hat = forward_propagation(X, params);
+        double cost = compute_cost(Y_Hat, Y);
+        Gradients grads = backward_propagation(Y_Hat, X, Y);
+        params = update_parameters(params, grads, learning_rate);
+
+        if (i % 100 == 0) {
+            cout << "iteration " << i << " cost = " << cost << endl;
+        }
+    }
+
+    return params;
+}
 
 
 
 int main() {
     vector<string> data = get_data();
     vector<double> tv= get_column(data,0), sales= get_column(data,1);
-    //get data and converted    
+    cout << "\ntotal lines: " << data.size() << endl;
+    //get data    
     double mean_value_tv=mean(tv), mean_value_sales=mean(sales);
 
     double std_dev_tv=std_dev(tv,mean_value_tv),std_dev_sales=std_dev(sales,mean_value_sales);  
 
-    vector<double> normalized_tv=normalize(tv,mean_value_tv,std_dev_tv), normalized_sales=normalize(sales,mean_value_sales,std_dev_sales);
-    Parameters params = initialize_parameters(); 
-    vector<double> W = params.W;                 
-    double b = params.b;                         
+    vector<double> normalized_X=normalize(tv,mean_value_tv,std_dev_tv), normalized_Y=normalize(sales,mean_value_sales,std_dev_sales);
+    
+    Parameters trained_params = train(normalized_X, normalized_Y, 1000, 0.01);
+    Parameters params;
+    vector<double> W = trained_params.W;                 
+    double b = trained_params.b;
+
+    cout << endl;
+    for (double x : W) cout << x << endl;
+    cout << endl;
+    cout << b << endl;  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // Parameters params = initialize_parameters(); 
+    // vector<double> W = params.W;                 
+    // double b = params.b;
+       
 
     
+    // vector<double> Y_Hat=forward_propagation(normalized_X,params);
 
-    cout << "\ntotal lines: " << data.size() << endl;
+    // double cost=compute_cost(Y_Hat,normalized_Y);
+    // cout<<"cost:"<<cost<<endl;
+
+    // //Backward propagation
+    // // Compute the gradients:
+    // Gradients grads=backward_propagation(Y_Hat,normalized_X,normalized_Y);
+    // double dW=grads.dW,db=grads.db;
+    // cout<<"Gradients: dW:"<<dW<<" db: "<<db<<endl;
+
+
+    // //Update parameters
+    // // we gonna apply gradient descent at here
+
+
+    // // loop 
+    // // we gonna do it multiple timess
+    
+
+    
 }
