@@ -1,0 +1,26 @@
+{
+    "python-envs.pythonProjects": [],
+    // =========================================================================
+    // 1. GLOBAL SETTING to DISABLE AI "GHOST TEXT"
+    // =========================================================================
+    "editor.inlineSuggest.enabled": false,
+
+    // =========================================================================
+    // 2. SPECIFIC AI EXTENSION SETTINGS (for redundancy)
+    // =========================================================================
+
+    // --- GitHub Copilot ---
+    // Specifically disables Copilot's inline suggestions.
+    "github.copilot.inlineSuggest.enabled": false,
+
+    // This setting ensures Copilot suggestions don't mix into the normal pop-up (Ctrl+Space).
+    "github.copilot.editor.enableAutoCompletions": false,
+
+
+    // --- Tabnine ---
+    "tabnine.inlineSuggestionsEnabled": false,
+
+    // --- Amazon CodeWhisperer ---
+    "aws.codeWhisperer.automaticTrigger.enabled": false,
+    "aws.codeWhisperer.includeSuggestionsWithCodeReferences": false
+}
