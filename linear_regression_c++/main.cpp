@@ -4,9 +4,21 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
+#include <random>
 
 
 using namespace std;
+
+//gonna use while returning parameters
+struct Parameters {
+    vector<double> W;
+    double b;
+};
+
+
+
+
+
 
 vector<string> get_data() {
     ifstream file("tvmarketing.csv"); 
@@ -56,16 +68,50 @@ double std_dev(const vector<double>&data,double mean_value){
     return sqrt(sum/data.size());
 }
 
-// double normalize(const vector<double>&data,double mean_value,double)
+vector<double> normalize(const vector<double>&column,double mean_value,double std_dev){
+    vector<double> result;
+    for(double x : column){
+        x= (x-mean_value)/std_dev;
+        result.push_back(x);
+    }
+    return result;
+}
+
+Parameters initialize_parameters(int n_x = 1) {
+    Parameters params;
+    params.W.resize(n_x);
+
+    // random generator
+    random_device rd;
+    mt19937 gen(rd());
+    normal_distribution<> dis(0.0, 0.01);
+
+    for(int i = 0; i < n_x; i++) {
+        params.W[i] = dis(gen);
+    }
+
+    params.b = 0.0;
+
+    return params;
+}
+
 
 
 
 int main() {
     vector<string> data = get_data();
     vector<double> tv= get_column(data,0), sales= get_column(data,1);
+    //get data and converted    
     double mean_value_tv=mean(tv), mean_value_sales=mean(sales);
-    double std_dev_tv=std_dev(tv,mean_value_tv),std_dev_sales=std_dev(sales,mean_value_sales);
 
+    double std_dev_tv=std_dev(tv,mean_value_tv),std_dev_sales=std_dev(sales,mean_value_sales);  
+
+    vector<double> normalized_tv=normalize(tv,mean_value_tv,std_dev_tv), normalized_sales=normalize(sales,mean_value_sales,std_dev_sales);
+    Parameters params = initialize_parameters(); 
+    vector<double> W = params.W;                 
+    double b = params.b;                         
+
+    
 
     cout << "\ntotal lines: " << data.size() << endl;
 }
