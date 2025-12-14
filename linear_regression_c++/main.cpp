@@ -111,9 +111,9 @@ double compute_cost(const vector<double>& Y_Hat, const vector<double>& Y) {
     double cost=0.0;
     for(int i=0;i<m;i++){
         double diff=Y_Hat[i]-Y[i];
-        cost+=diff;
+        cost+=(diff*diff);
     }
-    return cost;
+    return cost/(2*m);
 
 
 }
@@ -171,6 +171,13 @@ Parameters train(const vector<double>& X, const vector<double>& Y, int num_itera
 
     return params;
 }
+double predict(double raw_tv_budget,const Parameters& params, double mean_tv, double std_tv,double mean_sales, double std_sales) {
+    double normalized_tv = (raw_tv_budget - mean_tv) / std_tv;
+    double normalized_prediction = (params.W[0] * normalized_tv) + params.b;
+    double real_sales_prediction = (normalized_prediction * std_sales) + mean_sales;
+
+    return real_sales_prediction;
+}
 
 
 
@@ -190,44 +197,16 @@ int main() {
     vector<double> W = trained_params.W;                 
     double b = trained_params.b;
 
-    cout << endl;
-    for (double x : W) cout << x << endl;
-    cout << endl;
-    cout << b << endl;  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // Parameters params = initialize_parameters(); 
-    // vector<double> W = params.W;                 
-    // double b = params.b;
-       
 
-    
-    // vector<double> Y_Hat=forward_propagation(normalized_X,params);
-
-    // double cost=compute_cost(Y_Hat,normalized_Y);
-    // cout<<"cost:"<<cost<<endl;
-
-    // //Backward propagation
-    // // Compute the gradients:
-    // Gradients grads=backward_propagation(Y_Hat,normalized_X,normalized_Y);
-    // double dW=grads.dW,db=grads.db;
-    // cout<<"Gradients: dW:"<<dW<<" db: "<<db<<endl;
+    cout << "\n Final parameters" << endl;
+    cout << "Weight: " << W[0] << endl;
+    cout << "Bias:   " << b << endl;
 
 
-    // //Update parameters
-    // // we gonna apply gradient descent at here
+    double test_budget = 2312; // example TV budget
+    double predicted_sales = predict(test_budget, trained_params, mean_value_tv, std_dev_tv, mean_value_sales, std_dev_sales);
 
-
-    // // loop 
-    // // we gonna do it multiple timess
-    
-
-    
+    cout << "\nPrediction Test" << endl;
+    cout << "TV Budget: " << test_budget << endl;
+    cout << "Predicted Sales: " << predicted_sales << endl;    
 }
